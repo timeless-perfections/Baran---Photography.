@@ -528,6 +528,29 @@ main {
   margin-bottom: 5px;
 }
   </style>
+<style>
+    .cloudinary-container { 
+        text-align: center; 
+        background: #1c1c1c; /* Koyu arka plan */
+        color: #fff; /* Beyaz yazı */
+        padding: 50px 20px; 
+        margin: 40px auto; 
+    }
+    #upload_widget_button { 
+        background-color: #ffe100; /* Sarı buton */
+        color: black; 
+        border: none; 
+        padding: 15px 30px; 
+        font-size: 16px; 
+        font-weight: bold; 
+        border-radius: 8px; 
+        cursor: pointer; 
+        transition: background-color 0.3s; 
+    }
+    #upload_widget_button:hover { background-color: #ffdd00; }
+    #photo_gallery { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    #photo_gallery img { border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 100px; }
+</style>
 </head>
 <body>
   <header>
@@ -732,7 +755,12 @@ main {
 </section>
 
   </main>
-
+<div class="cloudinary-container">
+    <h2 id="weddingTitle">Düğün Fotoğraflarınızı Yükleyin</h2>
+    <p>Bu özel günden en güzel anları bizimle paylaşın! (En fazla 3 fotoğraf)</p>
+    <button id="upload_widget_button">Fotoğraf Yükle</button>
+    <div id="photo_gallery"></div>
+</div>
   <footer>
     <p>Tüm hakları saklıdır © 2025</p>
     <div class="social-buttons">
@@ -1123,6 +1151,64 @@ main {
     setupModal('.service-card:nth-child(4)', 'corporateModal');
     setupModal('.service-card:nth-child(5)', 'droneModal');
 </script>
-  
+  <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>  
+
+<script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>  
+
+<script type="text/javascript">  
+    // HESAPLARI AÇTIKTAN SONRA BU BİLGİLERİ DOLDURACAKSIN
+    const cloudName = "SENIN_CLOUD_NAME_BURAYA"; 
+    const uploadPreset = "SENIN_UPLOAD_PRESET_ADIN_BURAYA";
+
+    // --- URL'DEN BİLGİ OKUYAN AKILLI KISIM ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const weddingId = urlParams.get('wedding'); 
+
+    const weddingTitleElement = document.getElementById('weddingTitle');
+    const uploadButton = document.getElementById('upload_widget_button');
+
+    if (!weddingId) {
+        // Eğer URL'de ?wedding=... yoksa, yükleme bölümünü gizle.
+        const uploadContainer = document.querySelector('.cloudinary-container');
+        if(uploadContainer) uploadContainer.style.display = 'none';
+    } else {
+        const formattedTitle = weddingId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        weddingTitleElement.innerHTML = `${formattedTitle} Düğününe Hoş Geldiniz!`;
+    }
+    // --- AKILLI KISIM SONU ---
+
+    const myWidget = cloudinary.createUploadWidget({
+        cloudName: cloudName,
+        uploadPreset: uploadPreset,
+        maxFiles: 3,
+        // FOTOĞRAFLARI DÜĞÜNE ÖZEL KLASÖRE VE ETİKETLE KAYDET
+        folder: `misafir-yuklemeleri/${weddingId}`, 
+        tags: ['dugun', weddingId], 
+        sources: [ "local", "camera" ],
+        language: 'tr',
+        text: {
+            "sources.local.title": "Bilgisayardan Yükle",
+            "sources.camera.title": "Kamerayı Aç",
+            "queue.done": "Bitti"
+        }
+    }, 
+    (error, result) => { 
+        if (!error && result && result.event === "success") { 
+            console.log('Dosya başarıyla yüklendi: ', result.info); 
+            const gallery = document.getElementById("photo_gallery");
+            let img = document.createElement("img");
+            img.src = result.info.thumbnail_url;
+            gallery.appendChild(img);
+        }
+    });
+
+    if(uploadButton) {
+        uploadButton.addEventListener("click", function(){
+            if (weddingId) { // Sadece geçerli bir düğün linki varsa butonu çalıştır
+                myWidget.open();
+            }
+        }, false);
+    }
+</script>
 </body>
 </html> 
