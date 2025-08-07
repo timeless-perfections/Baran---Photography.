@@ -236,14 +236,141 @@ main {
       font-size: 1rem;
     }
     
-    @media (max-width: 768px) {
-      header nav { flex-direction: column; gap: 15px; }
-      header nav ul { gap: 15px; }
-      .home-text h1 { font-size: 2.2rem; }
-      .home-text p { font-size: 1rem; }
-      .gallery-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-    }
+/* ========================================= */
+/* === MOBİL UYUMLULUK (RESPONSIVE) KODLARI === */
+/* ========================================= */
+@media (max-width: 768px) {
+  /* --- Navigasyon Menüsü --- */
+  header nav ul {
+    /* Menüyü başlangıçta gizle ve sağa yasla */
+    position: fixed;
+    top: 0;
+    right: -100%; /* Ekranın tamamen sağına taşı */
+    width: 70%;
+    height: 100vh;
+    background: #1c1c1c;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    transition: right 0.4s ease-in-out;
+    padding: 20px;
+  }
 
+  header nav ul.nav-active {
+    right: 0; /* Menüyü görünür yap */
+  }
+
+  /* --- Hamburger İkonu --- */
+  .hamburger-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    z-index: 101; /* Menünün üstünde kalsın */
+  }
+  .hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Hamburger'ı X işaretine dönüştürme animasyonu */
+  .hamburger-menu.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-menu.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+  
+  header nav .logo {
+    font-size: 1.5rem;
+  }
+
+  /* --- Ana Sayfa Başlıkları --- */
+  .home-text h1 { 
+    font-size: 2.5rem; /* Mobilde başlıkları küçült */
+  }
+  .home-text p { 
+    font-size: 1.1rem; /* Mobilde metinleri küçült */
+  }
+  /* === İLETİŞİM BÖLÜMÜ MOBİL NİHAİ DÜZELTME === */
+.contact-container {
+  flex-direction: column;
+  gap: 40px;
+}
+
+.contact-left {
+  text-align: center;
+}
+.contact-left .social-icons {
+  justify-content: center;
+}
+
+.contact-right {
+  margin-left: 0;
+}
+
+.contact-item {
+  display: flex;          /* İkon ve metni yanyana getirir */
+  align-items: flex-start;    /* Üstten hizalar */
+  text-align: left;       /* Metni sola yaslar */
+  gap: 15px;              /* İkon ile metin arasına boşluk koyar */
+}
+
+.contact-item p {
+  flex-basis: 90%;         /* Metnin kullanabileceği alanı belirler */
+  word-break: break-all;   /* Bu, en inatçı kelimeleri bile kırar ve taşmayı engeller */
+}
+  
+  .contact-item p {
+    /* Bu en önemli kısım. Metnin taşmasını engeller ve alt satıra indirir. */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; /* Alt satıra geçmeyi engelleyen olası ayarları sıfırla */
+    flex: 1; /* Esneyerek kendisine verilen tüm alanı kaplasın */
+  }
+  .contact-left h2 {
+    text-align: center;
+  }
+  .social-icons {
+    justify-content: center;
+  }
+
+  /* --- Servis Kartları --- */
+  .services-list {
+    grid-template-columns: 1fr; /* Kartları tek sütun yap */
+  }
+
+  /* --- Modal Pencereler --- */
+  .modal-content {
+    padding: 20px;
+    margin: 20px auto;
+  }
+  .modal-title {
+    font-size: 1.8rem;
+  }
+}
+
+/* ========================================= */
+/* === METİN TAŞIRMA DÜZELTMELERİ (OVERFLOW FIX) === */
+/* ========================================= */
+.contact-item p, 
+.home-text h1, 
+.about-text p, 
+.modal-description,
+.service-desc {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+}
     .home-full-bg { 
   background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(71, 71, 71, 0.6)),
               url('https://images.unsplash.com/photo-1749437997835-ea820d6233d9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') 
@@ -258,25 +385,18 @@ main {
   overflow: hidden;
 }
 
-    .home-text { 
-      position: relative; 
-      z-index: 2; 
-      max-width: 900px; 
-      padding: 0 20px;
-    }
-    .home-text h1 { 
-      font-size: 4rem; 
-      margin-bottom: 25px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-      letter-spacing: 2px;
-    }
-    .home-text p { 
-      font-size: 1.5rem;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
+   /* --- Ana Sayfa Başlıkları --- */
+  .home-text {
+    padding: 0 20px; /* Metnin sağdan ve soldan ekrana yapışmasını engeller */
+  }
+  .home-text h1 { 
+    font-size: 2.5rem; /* Başlığı mobil için küçült */
+    line-height: 1.2;  /* Satırlar arası boşluğu ayarla */
+  }
+  .home-text p { 
+    font-size: 1.1rem; /* Alt metni mobil için küçült */
+    line-height: 1.6;  /* Okunabilirliği artır */
+  }
 
     .gallery-item {
       opacity: 1;
@@ -434,7 +554,11 @@ main {
       box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
     
-    @media (max-width: 768px) {
+     @media (max-width: 768px){
+      
+      .home-full-bg {
+      min-height: 100vh; /* Konteyner yüksekliğini tam ekran boyutu yap */
+      }
       .about-container {
         flex-direction: column;
         padding: 20px;
@@ -563,6 +687,11 @@ main {
         <li class="nav-item" data-page="services">Hizmetler</li>
         <li class="nav-item" data-page="contact">İletişim</li>
       </ul>
+      <div class="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </nav>
   </header>
   
@@ -1106,6 +1235,14 @@ main {
     });
 
     setActivePage('home');
+    // Hamburger menü işlemleri
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('header nav ul');
+
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('nav-active');
+        hamburger.classList.toggle('active');
+    });
 
     // Portfolio filtering
     const categoryButtons = document.querySelectorAll('.category-btn');
